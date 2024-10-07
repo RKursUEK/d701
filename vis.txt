@@ -1,0 +1,32 @@
+#zainstaluj pakiet
+install.packages("googleVis")
+
+#za≥aduj pakiet
+library(googleVis)
+
+#pobierz dane dotyczπce turystyki
+load(choose.files())
+
+#Pokaø nazwy zmiennych
+names(tm)
+
+#Wyúwietl dane
+fix(tm)
+
+#Wyúwietl podsumowanie
+summary(tm)
+
+#Pokaø dane tylko dla Polski
+edit(tm[tm[,2]=="Poland",])
+
+#Pokaø dane dla Polski
+
+#Sporzπdü ruchomy wykres dla zbioru danych tm
+M<-gvisMotionChart(tm, idvar="country.name", timevar="year", 
+options=list(width=700, height=600))
+
+plot(M)
+
+#Zapisz wykres jako plik z kodem html
+print(M, file="wykres_tur.html")
+
