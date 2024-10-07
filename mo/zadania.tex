@@ -1,0 +1,65 @@
+\documentclass[11pt]{article}
+\usepackage{polski}
+\usepackage[utf8]{inputenc}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage[T1]{fontenc}
+\usepackage{times}
+\usepackage{courier}
+\usepackage{enumerate}
+
+
+
+\begin{document}
+
+\begin{center}\large{ \textbf{PROGRAMOWANIE LINIOWE - ZADANIA}} \end{center}
+
+\textbf{Zadanie 1}\\
+Przedsiębiotrstwo produkuje dwa produkty $P_1$ i $P_2$. W procesie ich wytworzenia wykorzystuje trzy surowce: $S_1$, $S_2$ i $S_3$.
+Zużycie poszczególnych surowców do produkcji jednostki każdego z produktów zebrano w tabeli. W ostatniej kolumnie tabeli przedstawiono limity poszczególnych surowców dostępnych w przedsiębiorstwie dla miesięcznej produkcji.
+
+
+\begin{center}
+%\begin{table}
+\begin{tabular}{|c||c|c||c|}
+
+\hline
+surowce  produkty&$P_1$&$P_2$&limit\\
+\hline
+\hline
+$S_1$&3&2&7\\
+$S_2$&3&4&8\\
+$S_3$&1&5&8\\
+\hline
+\end{tabular}\\
+%\caption {moja tabela}
+%\end{table}
+\end{center}
+Przyjmując, że produkty $P_1$ i $P_2$ można sprzedać odpowiednio po cenach $c_1=3$ PLN i $c_2=5$ PLN, określ strukturę produkcji, która pozwalała by uzyskać maksymalny przychód.\\
+W tym celu wykonaj następujące polecenia:
+\begin{enumerate}[a)]
+\item Zapisz zadanie maksymalizacji (będące zadaniem prymalnym) w postaci standardowej, tzn. określ funkcję celu $Z$ i podaj warunki ograniczające definiujące zbiór rozwiązań dopuszczalnych (ZRD).
+\item Podaj wymiar zadania, tzn. liczbę zmiennych decyzyjnych $n$, liczbę funkcyjnych warunków ograniczających $m$ oraz łączną liczbę warunków ograniczających.
+\item Czy zadanie jest przykładem programowania liniowego?
+\item Czy zadanie prymalne można rozwiązać przy pomocy metody geometrycznej czy tylko przy pomocy metody simpleks?
+\item Podaj górne ograniczenie liczby iteracji dla metody geometrycznej i metody simpleks? Czy te liczby są sobie równe?
+\item Jeżeli rozwiązujesz zadanie metodą simpleks, zapisz je w postaci kanonicznej.
+\item Wyznacz optymalne rozwiązanie, maksymalizujące funkcję celu: $\mathbf{x^\ast}=\begin{bmatrix}x_1^\ast & x_2^\ast \end{bmatrix} '$.
+\item Wyznacz wartość funkcji celu odpowiadającą rozwiązaniu optymalnemu: $Z^\ast$.
+\item Które funkcyjne warunki ograniczające  dla rozwiązania optymalnego są spełnione w formie równości, a które w formie ostrej nierówności.
+\item Określ ceny dualne surowców $S_1$, $S_2$ i $S_3$. Jeżeli stosujesz metodę geometryczną do określenia cen dualnych wykorzystaj rozwiązanie problemu dualnego z \textbf{Zadania 2}. Zinterpretuj znaczenie cen dualnych surowców.
+\item$^\ast$ Wykonaj analizę wrażliwości w wariancie analizy przedziałowej parametrów funkcji celu (poszczególne ceny sprzedaży produktów) oraz wyrazów wolnych funkcyjnych warunków ograniczających (zasoby poszczególnych surowców).   
+\end{enumerate}
+
+\textbf{Zadanie 2}\\
+Dla zagadnienia maksymalizacji przedstwaionego w \textbf{Zadaniu 1} rozważ zadanie dualne oraz wykonaj następujące polecenia: 
+\begin{enumerate}[a)]
+\item Zapisz zadanie dualne względem pierwotnego zadania maksymalizacji w postaci standardowej, tzn. zapisz jego funkcję celu $K$, określ kierunek jej optymalizacji (minimalizacja czy maksymalizacja) oraz podaj warunki ograniczające dla tego zadania, tworzące definicję ZRD. 
+\item Podaj wymiar zadania dualnego, tzn. liczbę dualnych zmiennych decyzyjnych, liczbę funkcyjnych warunków ograniczających oraz łączną liczbę warunków ograniczających. Czy istnieją w tym względzie zależności pomiędzy zadaniem prymalnym a dualnym.
+\item Rozwiąż zadanie metodą geometryczną wykorzystując uzyskane rozwiązanie optymalne zadania prymalnego oraz twierdzenia dotyczące zależności pomiędzy optymalnym rozwiązaniem zadania dualnego i prymalnego.
+\item Jeżeli rozwiązałeś zadanie prymalne metodą simpleks, zastanów się czy rozwiązanie optymalne dla zadania dualnego z tablicy simpleks dla rozwiązania optymalnego zadania prymalnego.
+\item Czy istnieje związek pomiędzy wartością funkcji celu zadania prymalnegodla rozwiązania optymalnego $Z^\ast$, a wartością optymalną $K^\ast$ funkcji celu zadania dualnego. 
+\end{enumerate}
+
+
+\end{document}

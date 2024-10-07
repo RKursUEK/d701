@@ -1,0 +1,260 @@
+\documentclass[11pt]{article}\usepackage{graphicx, color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\definecolor{fgcolor}{rgb}{0.2, 0.2, 0.2}
+\newcommand{\hlnumber}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlfunctioncall}[1]{\textcolor[rgb]{0.501960784313725,0,0.329411764705882}{\textbf{#1}}}%
+\newcommand{\hlstring}[1]{\textcolor[rgb]{0.6,0.6,1}{#1}}%
+\newcommand{\hlkeyword}[1]{\textcolor[rgb]{0,0,0}{\textbf{#1}}}%
+\newcommand{\hlargument}[1]{\textcolor[rgb]{0.690196078431373,0.250980392156863,0.0196078431372549}{#1}}%
+\newcommand{\hlcomment}[1]{\textcolor[rgb]{0.180392156862745,0.6,0.341176470588235}{#1}}%
+\newcommand{\hlroxygencomment}[1]{\textcolor[rgb]{0.43921568627451,0.47843137254902,0.701960784313725}{#1}}%
+\newcommand{\hlformalargs}[1]{\textcolor[rgb]{0.690196078431373,0.250980392156863,0.0196078431372549}{#1}}%
+\newcommand{\hleqformalargs}[1]{\textcolor[rgb]{0.690196078431373,0.250980392156863,0.0196078431372549}{#1}}%
+\newcommand{\hlassignement}[1]{\textcolor[rgb]{0,0,0}{\textbf{#1}}}%
+\newcommand{\hlpackage}[1]{\textcolor[rgb]{0.588235294117647,0.709803921568627,0.145098039215686}{#1}}%
+\newcommand{\hlslot}[1]{\textit{#1}}%
+\newcommand{\hlsymbol}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlprompt}[1]{\textcolor[rgb]{0.2,0.2,0.2}{#1}}%
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\usepackage{polski}
+\usepackage[utf8]{inputenc}
+\usepackage{mathtools}
+\usepackage{amsmath}
+%\usepackage[T1]{fontenc}
+%\usepackage{times}
+%\usepackage{courier}
+\usepackage{enumerate}
+
+\begin{document}
+
+\begin{center}\textbf{\large{PROGRAMOWANIE LINIOWE - SZKIC ROZWIĄZANIA ZADAŃ}}\end{center}
+
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcomment{# Określenie parametrów zadania prymalnego}
+A <- \hlfunctioncall{matrix}(\hlfunctioncall{c}(3, 3, 1, 2, 4, 5), ncol = 2)
+b <- \hlfunctioncall{matrix}(\hlfunctioncall{c}(7, 8, 8))
+c <- \hlfunctioncall{c}(3, 5)
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+
+\begin{equation*} \max_{(x_1,x_2) \in D} Z= 3x_1+5x_2\end{equation*}\\
+pod warunkiem
+\begin{eqnarray*}
+D=\{(x_1,x_2) \in \mathbf{R}^2: \\ 
+3x_1+2x_2 &  \le & 7    \\
+3x_1+4x_2 &\le & 8   \\
+1x_1+5x_2 & \le & 8    \\
+x_1 \ge 0, x_2 \ge 0 & &\} \\
+\end{eqnarray*}
+
+\begin{center}\textbf{Rozwiązanie metodą geometryczną}\end{center}
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcomment{# Górna granica liczby iteracji}
+n <- \hlfunctioncall{dim}(A)[2]
+m <- \hlfunctioncall{dim}(A)[1]
+it <- \hlfunctioncall{choose}(n + m, n)
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+Górna granica liczby iteracji wynosi 10.
+
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcomment{# Metoda geometryczna - rozwiązanie zadania prymalnego}
+optg <- \hlfunctioncall{maxgeom}(A, b, c)
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/geom} 
+
+\end{knitrout}
+
+
+Rozwiązanie optymalne zadania prymalnego (maksymalizacji) przedstawia się następująco:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+    x1     x2      Z 
+0.7273 1.4545 9.4545 
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+Zadanie dualne - minimalizacja:
+\begin{equation*} \min_{(y_1,y_2,y_3) \in D'} K= 7y_1+8y_2+8y_3\end{equation*}\\
+pod warunkiem
+\begin{eqnarray*}
+D'=\{(y_1,y_2,y_3) \in \mathbf{R}^3: \\ 
+3y_1+3y_2+1y_3 &  \ge & 3    \\
+2y_1+4y_2+5y_3 &\ge & 5   \\
+y_1 \ge 0, y_2 \ge 0, y_3 \ge 0 & &\} \\
+\end{eqnarray*} 
+
+Wykorzystanie optymalnego rozwiązania zadania prymalnego metodą geometryczną oraz twierdzeń o dualności w celu rozwiązania zadania dualnego:
+
+Funkcyjne warunki ograniczające 2 i 3 dla optymalnego rozwiązania przybierają postać równań, natomiast dla tegoż rozwiązania warunek 1 przyjmuje formę ostrej nierówności.
+Tak więc w oparciu o twierdzenia o dualności mamy:
+Dla zadania dualnego $y_1=0$, $y_2>0$ $y_3>0$.
+
+Ponadto jako, że obie zmienne decyzjne dla optymalnego rozwiązania zadania prymalnego przyjmują wartości dodatnie $x_1^\ast=0.7273, x_2^\ast=1.4545$, na podstawie twierdzeń można stwierdzić, że w zadaniu dualnym dla rozwiązania optymalnego oba funkcyjne warunki ograniczające przybierają postać równości. 
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+
+\hlcomment{# Zadanie dualne - rozwiązanie z wykorzystaniem twierdzeń o dualności}
+\hlcomment{# rozwiązanie optymalne zadania dualnego}
+dual <- \hlfunctioncall{rbind}(0, \hlfunctioncall{solve}(\hlfunctioncall{t}(A)[, -1], \hlfunctioncall{matrix}(c)))
+optmin <- \hlfunctioncall{t}(b) %*% dual
+rozwdual <- \hlfunctioncall{c}(dual, optmin)
+\hlfunctioncall{names}(rozwdual) <- \hlfunctioncall{c}(\hlstring{"y1"}, \hlstring{"y2"}, \hlstring{"y3"}, \hlstring{"K"})
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+Zgodnie z powyższymi ustaleniami wartości zmiennych dualnej dla rozwiązania optymalnego są następujące: $y_1^\ast$ wynosi 0, a wartości zmiennych $y_2^\ast$, $y_3^\ast$ otrzymujemy jako rozwiązanie układu równań:
+\begin{eqnarray*}
+3y_2+1y_3 &  = & 3    \\
+4y_2+5y_3 & = & 5   \\
+\end{eqnarray*} 
+
+Optymalne rozwiązanie dualne dane jest następująco:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+    y1     y2     y3      K 
+0.0000 0.9091 0.2727 9.4545 
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+Rozwiązaniem zadania dualnego $y_1^\ast=0,y_2^\ast=0.9091,y_3^\ast=0.2727$ są ceny dualne surowców.
+
+Interpretacja cen dualnych: $\ldots$\\
+Jak widać wartości funkcji celu dla rozwiązań optymalnych są równe dla zadania prymalnego i zadania dualnego: #Z^\ast=K^\ast=9.4545$
+
+\begin{center}\textbf{Rozwiązanie metodą simpleks}\end{center}
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcomment{# Metoda simpleks - rozwiązanie zadania prymalnego}
+
+\hlfunctioncall{library}(lpSolve)
+
+\hlfunctioncall{choose}(m + n, m)
+\end{alltt}
+\begin{verbatim}
+[1] 10
+\end{verbatim}
+\begin{alltt}
+
+zn <- \hlfunctioncall{rep}(\hlstring{"<="}, 3)
+optsim <- \hlfunctioncall{lp}(\hlstring{"max"}, c, A, zn, \hlfunctioncall{t}(b), compute.sens = 1)
+optsim$solution
+\end{alltt}
+\begin{verbatim}
+[1] 0.7273 1.4545
+\end{verbatim}
+\begin{alltt}
+optsim$objval
+\end{alltt}
+\begin{verbatim}
+[1] 9.455
+\end{verbatim}
+\begin{alltt}
+optsimdual <- optsim$duals
+\hlcomment{# zerowy wiersz tablicy simpleks dla rozwiązania #optymalnego}
+\hlfunctioncall{names}(optsimdual) <- \hlfunctioncall{c}(\hlstring{"s1"}, \hlstring{"s2"}, \hlstring{"s3"}, \hlstring{"x1"}, \hlstring{"x2"})
+optsimdual
+\end{alltt}
+\begin{verbatim}
+    s1     s2     s3     x1     x2 
+0.0000 0.9091 0.2727 0.0000 0.0000 
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+Zerowy wiersz w tablicy simpleks dla rozwiązania optymalnego zadania prymalnego, zawiera w komórkach odpowiadających zmiennym swobodnym tzn. $s_1^\ast, s_2^\ast,s_3^\ast$ rozwiązanie zadania dualnego:$s_1^\ast=y_1^\ast=0, s_2^\ast=y_2^\ast=0.9091, s_3^\ast=y_3^\ast=0.2727$, które określa ceny dualne poszczególnych surowców.\\
+
+Funkcja \textit{lp} z pakietu \textit{lpSolve} umożliwiająca rozwiązania zadania PL metodą simpleks zwraca następujące elementy:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlfunctioncall{names}(optsim)
+\end{alltt}
+\begin{verbatim}
+ [1] "direction"        "x.count"          "objective"       
+ [4] "const.count"      "constraints"      "int.count"       
+ [7] "int.vec"          "bin.count"        "binary.vec"      
+[10] "num.bin.solns"    "objval"           "solution"        
+[13] "presolve"         "compute.sens"     "sens.coef.from"  
+[16] "sens.coef.to"     "duals"            "duals.from"      
+[19] "duals.to"         "scale"            "use.dense"       
+[22] "dense.col"        "dense.val"        "dense.const.nrow"
+[25] "dense.ctr"        "use.rw"           "tmp"             
+[28] "status"          
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+Rozważmy zwracane elementy pod kątem uzyskania wyników analizy wrażliwości - analizy przedziałowej.
+
+\end{document}
