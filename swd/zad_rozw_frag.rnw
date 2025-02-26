@@ -1,0 +1,53 @@
+\documentclass[10pt]{article}
+\usepackage{polski}
+\usepackage[cp1250]{inputenc}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{enumerate}
+
+\begin{document}
+
+\begin{center}
+\Large{SZKIC ROZWI¥ZAÑ}
+\end{center}
+
+\textbf{Problem 1}\\
+
+Za³adowanie funkcji \verb|crit|, s³u¿¹cej do rozwi¹zywania problemów decyzyjnych w warunkach niepewnoœci.
+<<laduj,include=FALSE>>=
+source("http://wizard.uek.krakow.pl/~d701/swd/opt.r")
+@
+
+<<link,include=TRUE,eval=FALSE,echo=TRUE>>=
+source("http://wizard.uek.krakow.pl/~d701/swd/opt.r")
+@
+
+Zdefiniowanie macierzy wyp³at \verb|m|.
+
+<<niepm,eval=TRUE,echo=TRUE,comment=NA,tidy=TRUE>>=
+m <- matrix(c(90, 70, 80, 65, 10, 80, 60, 70, 45, 20, 40, 50, 20, 40, 30,
+            20, 10, 40, 70, 50), ncol = 4)
+print(m)
+@
+
+Poni¿ej przedstawiono rozwi¹zanie zadania decyzjnego w warunkach niepewnoœci z wykorzystaniem funkcji \verb|crit|  dla macierzy wyp³at \verb|m|. \\
+
+Funkcja \verb|crit|  zwraca optymalne decyzje w œwietle przyjêtych kryteriów, wraz z wartoœciami im odpowiadaj¹cymi. Dla kryterium Hurwicza przyjêto $\alpha = 0,4$ (dla kryterium Hurwicza decydent jest w niewielkim stopniu bardziej optymistyczny).
+
+<<niep,eval=TRUE,echo=TRUE,comment=NA,tidy=TRUE>>=
+crit(m, alpha = 0.4)
+@
+Decydent pesymistyczny jako podstawê decyzji przyjmuje kryterium Walda.
+Wed³ug kryterium Walda optymaln¹ decyzj¹ jest decyzja $d_4$, dla której wartoœæ kryterium $maximin$ wynios³a 40. Decyzja $d_4$ odpowiada podjêciu inwestycji w obligacje skarbu pañstwa kraju inwestycji.\\
+
+W zwi¹zku z brakiem znajomoœci rozk³adu stanów natury (mo¿liwych do zaobserwowania faz cyklu koniunkturalnego), kryterium Laplace'a przyjmuje dla nich arbitralnie rozk³ad jednostajny skokowy (w tym przypadku przyjêto, ¿e prawdopodobieñstwa zaobserwowania poszczególnych stanów wynios³y $\frac{1}{4}$.\\
+
+$\ldots$\\
+
+\textbf{Problem 2}\\
+   
+   W przypadku dysponowania wartoœciami $x$ zmiennej $X$, warunkuj¹cych rozk³ad $Y$ (co oznacza, ¿e rozk³ad prawdoodobieñstwa zmiennej $Y$, ró¿ni siê w zale¿noœci od tego jak¹ wartoœæ $x$ przyjmuje zmienna $X$), podstaw¹ podejmowania decyzyji w warunkach ryzyka powinien byæ rozk³ad warunkowy $Y|X=x$. Wartoœci $f_{Y|X}(y|x)$ wyznacza siê podstawiaj¹c konkretn¹ wartoœæ $x$. \\ Zak³adaj¹c znajomoœæ wartoœci macierzy strat, za optymaln¹ decyzjê w zadaniu decyzyjnym w warunkach ryzyka, przyjmuje siê decyzjê $d \in \{d_1,\ldots,d_n\}$, w przypadku której wartoœæ oczekiwana straty (ryzyko) $$\rho(P_Y,d)=\sum_{y \in \{y_1,\ldots,y_m\}}L(y,d)\cdot f_{Y|X}(y|x)$$ jest minimalna (zasada minimalizacji ryzyka).\\  
+   
+$\ldots$\\
+
+\end{document}

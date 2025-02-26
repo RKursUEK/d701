@@ -1,0 +1,185 @@
+\documentclass[10pt]{article}
+\usepackage{polski}
+\usepackage[cp1250]{inputenc}
+\usepackage{mathtools}
+\usepackage{amsmath}
+%\usepackage[T1]{fontenc}
+%\usepackage{times}
+%\usepackage{courier}
+\usepackage{enumerate}
+%\usepackage{verbatim}
+
+\begin{document}
+\begin{center}
+\Large{SZKIC ROZWI¥ZAÑ}
+\end{center}
+\textbf{Problem 1}\\
+
+Za³adowanie funkcji \verb|crit|, s³u¿¹cej do rozwi¹zywania problemów decyzyjnych w warunkach niepewnoœci.
+<<laduj,include=FALSE>>=
+source("http://wizard.uek.krakow.pl/~d701/swd/opt.r")
+@
+
+<<link,include=TRUE,eval=FALSE,echo=TRUE>>=
+source("http://wizard.uek.krakow.pl/~d701/swd/opt.r")
+@
+
+Zdefiniowanie macierzy wyp³at \verb|m|.
+
+<<niepm,eval=TRUE,echo=TRUE,comment=NA,tidy=TRUE>>=
+m <- matrix(c(90, 70, 80, 65, 10, 80, 60, 70, 45, 20, 40, 50, 20, 40, 30,
+            20, 10, 40, 70, 50), ncol = 4)
+print(m)
+@
+
+Poni¿ej przedstawiono rozwi¹zanie zadania decyzjnego w warunkach niepewnoœci z wykorzystaniem funkcji \verb|crit|  dla macierzy wyp³at \verb|m|. \\
+
+Funkcja \verb|crit|  zwraca optymalne decyzje w œwietle przyjêtych kryteriów, wraz z wartoœciami im odpowiadaj¹cymi. Dla kryterium Hurwicza przyjêto $\alpha = 0,4$ (dla kryterium Hurwicza decydent jest w niewielkim stopniu bardziej optymistyczny).
+
+<<niep,eval=TRUE,echo=TRUE,comment=NA,tidy=TRUE>>=
+crit(m, alpha = 0.4)
+@
+Decydent pesymistyczny jako podstawê decyzji przyjmuje kryterium Walda.
+Wed³ug kryterium Walda optymaln¹ decyzj¹ jest decyzja $d_4$, dla której wartoœæ kryterium $maximin$ wynios³a 40. Decyzja $d_4$ odpowiada podjêciu inwestycji w obligacje skarbu pañstwa kraju inwestycji.\\
+
+W zwi¹zku z brakiem znajomoœci rozk³adu stanów natury (mo¿liwych do zaobserwowania faz cyklu koniunkturalnego), kryterium Laplace'a przyjmuje dla nich arbitralnie rozk³ad jednostajny skokowy (w tym przypadku przyjêto, ¿e prawdopodobieñstwa zaobserwowania poszczególnych stanów wynios³y $\frac{1}{4}$.\\
+Dla kryterium Laplace'a optymaln¹ jest decyzja $d_1$ (bezpoœrednie inwestycje zagraniczne od podstaw), której odpowiada wartoœæ kryterium równa $57,5$, bêd¹ca maksymaln¹ wartoœci¹ oczekiwan¹ wyp³aty spoœród 5 mo¿liwych decyzji.\\ 
+
+Kryterium Hurwicza umo¿liwia okreœlenie przez decydenta relatywnego stopnia pesymizmu-optymizmu, poprzez wykorzystanie wspó³czynnika $\alpha \in [0,1]$ . Im $\alpha$ bli¿sze 1, tym wiêkszy stopieñ pesymizmu decydenta, przy $\alpha < 0,5$ u decydenta dominuje optymizm.\\ 
+Kryterium Hurwicza wskazuje przy $\alpha=0,4$ na decyzjê $d_1$ (bezpoœrednie inwestycje zagraniczne od podstaw), dla której wa¿ona œrednia $min$ i $max$ wyp³aty by³a najwy¿sza i wynios³a 62.\\
+
+Macierz ¿alu jest podstw¹ podejmowania dezyji w przypadku kryterium Savage'a.
+Kryterium Savage'a, w celu wskazania optymalnej decyzji wykorzystuje zasadê $minimax$ dla macierzy ¿alu. \\
+Macierz ¿alu w tym zadaniu decyzyjnym przedstawia siê nastêpuj¹co:
+<<zal,include=FALSE,eval=TRUE,echo=FALSE>>=
+rm <- apply(m, 2, max)
+mv <- matrix(rm, nrow = dim(m)[1], ncol = dim(m)[2], byrow=TRUE)
+r <- mv-m
+@
+
+<<zalp,include=TRUE,eval=TRUE,echo=TRUE,comment=NA,tidy=TRUE>>=
+print(r)
+@
+Decyzj¹, z któr¹ wi¹¿e siê postulowana przez kryterium najni¿sza maksymalna wartoœæ ¿alu, jest decyzja $d_3$ (inwestycje w istniej¹ce przedsiêbiorstwo us³ugowe). Wartoœæ kryterium Savage'a dla decyzji $d_3$ wynios³a 30.\\
+Podsumowanie liczby wskazañ okreœlonych decyzji jako optymalnych, zawiera element \verb|dec.count| listy zwaracanej przez funkcjê \verb|crit| oraz wykres s³upkowy. Dwa kryteria wskazuj¹ na decyzjê $d_1$ jako optymaln¹, po jednym z kryteriów wskazuje odowiednio na decyzjê $d_3$ i $d_4$.\\
+
+\textbf{Problem 2}\\
+   
+   W przypadku dysponowania wartoœciami $x$ zmiennej $X$, warunkuj¹cych rozk³ad $Y$ (co oznacza, ¿e rozk³ad prawdopodobieñstwa zmiennej $Y$, ró¿ni siê w zale¿noœci od tego jak¹ wartoœæ $x$ przyjmuje zmienna $X$), podstaw¹ podejmowania decyzyji w warunkach ryzyka powinien byæ rozk³ad warunkowy $Y|X=x$. Wartoœci $f_{Y|X}(y|x)$ wyznacza siê podstawiaj¹c konkretn¹ wartoœæ $x$. \\ Zak³adaj¹c znajomoœæ wartoœci macierzy strat, za optymaln¹ decyzjê w zadaniu decyzyjnym w warunkach ryzyka, przyjmuje siê decyzjê $d \in \{d_1,\ldots,d_n\}$, w przypadku której wartoœæ oczekiwana straty (ryzyko) $$\rho(P_Y,d)=\sum_{y \in \{y_1,\ldots,y_m\}}L(y,d)\cdot f_{Y|X}(y|x)$$ jest minimalna (zasada minimalizacji ryzyka).\\  
+   W przypadku, gdy poszczególne decyzje $d_1,\ldots,d_n$ mo¿na bezpoœrednio powi¹zaæ z okreœlonymi wartoœciami $Y$: $y \in \{1,\ldots,m\}$, przy czym $n=m(=3$ w rozwa¿anym zadaniu), natomiast straty zwi¹zane z dowoln¹ b³êdn¹ prognoz¹ s¹ równe, a trafne prognozy zwi¹zane s¹ z zerow¹ strat¹, zasada minimalizacji ryzyka sprowadza siê do zasady majoryzacji prawdopodobieñstwa $f_{Y|X}(y|x)$, $y$ pod warunkiem $x$,  tzn.
+   $i^\ast= \mathrm{argmax}_{y \in \{1,\ldots,n\}} f_{Y|X}(y|x)$, gdzie jest indeksem optymalnej decyzji $d_{i^\ast}$. Tego typu za³o¿enia przyjêto tak¿e w rozwa¿anym problemie.\\
+   \underline{Dla rozwa¿anego zadania decyzyjnego}:
+   Funkcja masy prawdopodobieñstwa rozk³adu brzegowego zmiennej $Y$:\\
+$$f_Y(y)=\begin{cases}
+    0,2 & \mathrm{gdy }\, y=1 \\
+    0,5 & \mathrm{gdy }\, y=2 \\
+    0,3 & \mathrm{gdy }\, y=3 
+   \end{cases}$$
+   Funkcje gêstoœci rozk³adów warunkowych $X|Y=y,\, y \in \{1,2,3\}$:
+ \begin{itemize}  
+ \item $X|Y=1 \sim N(\mu_1=12,\sigma_1=2)$
+   $$f_{X|Y}(x|y=1)=\frac{1}{\sigma_1 \sqrt{2\pi}} \exp{\{-\frac{(x-\mu_1)^2}{2\sigma_1^2}\}}=\frac{1}{2 \sqrt{2\pi}} \exp{\{-\frac{(x-12)^2}{8}\}}$$
+   \item
+   $X|Y=2 \sim N(\mu_2=17,\sigma_2=3)$
+      $$f_{X|Y}(x|y=2)=\frac{1}{\sigma_2 \sqrt{2\pi}} \exp{\{-\frac{(x-\mu_2)^2}{2\sigma_2^2}\}}=\frac{1}{3 \sqrt{2\pi}} \exp{\{-\frac{(x-17)^2}{18}\}}$$
+  \item   $X|Y=3 \sim N(\mu_3=20,\sigma_3=2,5)$
+       $$f_{X|Y}(x|y=3)=\frac{1}{\sigma_3 \sqrt{2\pi}} \exp{\{-\frac{(x-\mu_3)^2}{2\sigma_3^2}\}}=\frac{1}{2,5 \sqrt{2\pi}} \exp{\{-\frac{(x-20)^2}{12,5}\}}$$
+       \end{itemize}
+       Funkcja gêstoœci rozk³adu ³¹cznego $X,Y$:\\
+       $$f_{XY}(x,y)=f_Y(y) \cdot  f_{X|Y}(x|y)$$
+       Funkcja gêstoœci rozk³adu brzegowego $X$:\\
+       $$f_X(x)=\sum_{y \in \{ 1,2,3 \}}  f_Y(y) \cdot f_{X|Y}(x|y)=$$
+       $$=\frac{0,2}{2 \sqrt{2\pi}} \exp{\{-\frac{(x-12)^2}{8}\}}+
+       \frac{0,5}{3 \sqrt{2\pi}} \exp{\{-\frac{(x-17)^2}{18}\}}+
+       \frac{0,3}{2,5 \sqrt{2\pi}} \exp{\{-\frac{(x-20)^2}{12,5}\}}
+       $$
+       
+       Funkcja masy prawdopodobieñstwa rozk³adu warunkowego $Y|X=x$:
+       $$f_{Y|X}(y|x)=\frac{f_{XY}(x,y)}{f_X(x)}=
+       \frac{f_Y(y) \cdot  f_{X|Y}(x|y)}{\sum_{y \in \{ 1,2,3 \}}  f_Y(y) \cdot f_{X|Y}(x|y)},\, y \in \{1,2,3\}$$
+       $f_{Y|X}(y|x)=\begin{cases}
+    \frac{\frac{0,2}{\sqrt{2\pi}} \exp{\{-\frac{(x-12)^2}{8}\}}}{\frac{0,2}{\sqrt{2\pi}} \exp{\{-\frac{(x-12)^2}{8}\}}+
+       \frac{0,5}{3 \sqrt{2\pi}} \exp{\{-\frac{(x-17)^2}{18}\}}+
+       \frac{0,3}{2,5 \sqrt{2\pi}} \exp{\{-\frac{(x-20)^2}{12,5}\}}}  & \mathrm{gdy }\, y=1 \\
+    \frac{\frac{0,5}{3 \sqrt{2\pi}} \exp{\{-\frac{(x-17)^2}{18}\}}}{\frac{0,2}{\sqrt{2\pi}} \exp{\{-\frac{(x-12)^2}{8}\}}+
+       \frac{0,5}{3 \sqrt{2\pi}} \exp{\{-\frac{(x-17)^2}{18}\}}+
+       \frac{0,3}{2,5 \sqrt{2\pi}} \exp{\{-\frac{(x-20)^2}{12,5}\}}} & \mathrm{gdy }\, y=2 \\
+    \frac{\frac{0,3}{2,5 \sqrt{2\pi}} \exp{\{-\frac{(x-20)^2}{12,5}\}}}{\frac{0,2}{\sqrt{2\pi}} \exp{\{-\frac{(x-12)^2}{8}\}}+
+       \frac{0,5}{3 \sqrt{2\pi}} \exp{\{-\frac{(x-17)^2}{18}\}}+
+       \frac{0,3}{2,5 \sqrt{2\pi}} \exp{\{-\frac{(x-20)^2}{12,5}\}}} & \mathrm{gdy }\, y=3 
+   \end{cases}$\\
+   
+   W celu rozwi¹zania, tak postawionego zadania decyzyjnego w warunkach ryzyka, mo¿na wykorzystaæ funkcjê \verb|sdt|, której nale¿y przegazaæ wartoœci nastêpuj¹cych argumentów:
+   \begin{itemize}
+   \item \verb|L| - macierz strat o wymiarach $m \times n$, domyœlna wartoœæ argumentu \verb|L=NULL| oznacza kwadratow¹ macierz ($m=n$) z wartoœciami 0 na diagonali oraz 1 poza ni¹, w przypadku której optymaln¹ decyzjê wyznacza siê w oparciu o zasadê majoryzacji $f_{Y|X}(y|x)$
+   \item \verb|d| - wektor wartoœci $x$ zmiennej warunkuj¹cej (objaœniaj¹cej) $X$
+   \item \verb|py| - wartoœci funkcji masy prawdopdobieñstwa dla $y \in \{1,\ldots,m\}$
+   \item \verb|r| - typ rozk³adów warunkowych $X|Y$, np. \verb|"dnorm"| - rozk³ad normalny, \verb|"dt"| - rozk³ad t-Studenta
+   \item \verb|...| - zastêpuje siê wektorami wartoœci parametrów  rozk³adów $X|Y$ odpowiedniego typu, np. dla rozk³adu normalnego: \verb|mean| - wektor wartoœci oczekiwanych rozk³adów warunkowych $X|Y=y,\, y \in \{1,\ldots,m\}$, tzn. $(\mu_1,\ldots,\mu_m)$ , \verb|sd| - wektor odchyleñ standardowych rozk³adów warunkowych $X|Y=y,\, y \in \{1,\ldots,m\}$, tzn. $(\sigma_1,\ldots,\sigma_m)$  
+   \end{itemize}
+   
+   Funkcja \verb|sdt| zwraca listê z nastêpuj¹cymi elementami:
+   \begin{itemize}
+   \item \verb|dist| - typ rozk³adów warunkowych $X|Y$
+   \item parametry rozk³adów warunkowych $Y|X$, dla rozk³adu normalbego \verb|mean| i \verb|sd|
+   \item \verb|cond.x.y| - wartoœæ funkcji gêstoœci warunkowej rozk³adu $X$
+   pod warunkiem $Y=y$, w punkcie $x$
+   zmiennej 
+   \item \verb|joint.xy| - wartoœæ funkcji gêstoœci ³¹cznej rozk³adu wektora $(X,Y)$ w punkcie $(x,y)$
+   \item \verb|cond.y.x| - wartoœæ funkcji masy prawdopodobieñstwa rozk³adu warunkowego $Y$ pod warunkiem $X=x$, w punkcie $y$
+   \item \verb|EL.by.dec| - wartoœæ ryzyka (oczekiwanej straty), dla poszczególnych decyzji $d \in \{d_1,\ldots,d_m\}$, wyznaczona w oparciu o rozk³ad warunkowy $Y|X=x$ 
+   \item \verb|dec| - optymalna deyzja \verb|d*| (skutkuj¹ca minimaln¹ wartoœci¹ oczekiwan¹ straty, przy rozk³adzie warunkowym $Y|X=x$) oraz odpowiadaj¹ca jej wartoœæ ryzyka  (oczekiwanej straty) \verb|ro*|; w przypadku, gdy \verb|L=NULL| (co odpowiada przyjêciu jednakowych wartoœci straty dla b³êdnych prognoz), wartoœæ \verb|ro*| zast¹piono maksymaln¹ wartoœci¹ prawdopodobieñstwa warunkowego  \verb|p.y.x.max = 1-ro*|: $\max_{y \in \{1,\ldots,n\}} f_{Y|X}(y|x)$, która jest równa $1-\rho^\ast$
+   \end{itemize}
+
+£adowanie funkcji \verb|sdt|:
+<<wyk,include=TRUE,eval=TRUE,echo=TRUE,tidy=TRUE>>=
+source("http://wizard.uek.krakow.pl/~d701/swd/std1.r")
+@
+
+Przypisanie wartoœci argumentów funkcji \verb|sdt| oraz jej wykonanie:
+<<std,eval=TRUE,echo=TRUE,comment=NA,tidy=TRUE,warning=FALSE>>=
+x <- c(14,15.5,20.25,10.2,19.75,9)
+sdt(d = x, py = c(0.2, 0.5, 0.3),
+    r = "dnorm", mean = c(12, 17, 20), sd = c(2, 3, 2.5))
+@
+
+Interpretacji wyników mo¿na dokonaæ na przyk³adzie przedsiêbiorstwa, które charakteryzuje siê wartoœci¹ wskaŸnika kondycji ekonomicznej $X$ równ¹ 14: $x=14$.
+Wzglêdem przedsiêbiorstwa nale¿y podj¹æ jedn¹ z trzech decyzji:\\
+$d_1$ - brak nawi¹zania wspó³pracy z przedsiêbiorstwem zagro¿onym upad³oœci¹, co odpowiada prognozie $\hat Y=1$,\\
+$d_2$ - odroczenie nawi¹zania wspó³pracy z przedsiêbiorstwem o œredniej kondycji ekonomicznej, co odpowiada prognozie $\hat Y=2$,\\
+$d_3$ - bezzw³oczne nawi¹zania wspó³pracy z przedsiêbiorstwem o bardzo dobrej kondycji ekonomicznej, co odpowiada prognozie $\hat Y=3$.\\
+Straty zwi¹zane z b³êdnymi prognozami s¹ równe, st¹d w tym przypadku stosuje siê zasadê majoryzacji opieraj¹c¹ siê na rozk³adzie warunkowym $Y|X=12$.\\
+Funkcja masy prawdopodobieñstwa rozk³adu warunkowego $f_{Y|X}(y|x=12)$, dane jest nastêpuj¹co (odczyt z pierwdzego wiersza \verb|cond.y.x|):\\
+$$f_{Y|X}(y|x=12)=\begin{cases}
+    0,36 & \mathrm{gdy }\, y=1 \\
+    0,60 & \mathrm{gdy }\, y=2 \\
+    0,04 & \mathrm{gdy }\, y=3 
+   \end{cases}$$
+   
+   Najwy¿sze prawdopodobieñstwo warunkowe $Y$, pod warunkiem $x=12$ zwi¹zane jest z wartoœci¹ $y=2$ i wynosi $60\%$. 
+   Tym samym najbardziej prawdopodobne jest, ¿e przedsiêbiorstwo ze wskaŸnikiem kondycji ekonomicznej równym 12, 
+   bêdzie nale¿a³o do grupy przedsiêbiorstw o œredniej kondycji.\\
+   Zgodnie z zasad¹ majoryzacji, dla tego przedsiêbiorstwo przyjmuje siê prognozê
+   $\hat Y=2$, która zwi¹zana jest z decyzj¹ $d_2$ (odczyt \verb|d*| z pierwszego wiersza
+   \verb|dec|), czyli odroczeniem podjêcia wspó³pracy z tym przedsiêbiorstwem.
+   Z decyzj¹ $d_2$ zwi¹zane jest minimalne ryzyko (wartoœæ oczekiwana straty)
+   równa $\rho^\ast=1-0,6=0,4$ (co odpowiada wartoœci \verb|ro.d2| w pierwszym wierszu
+   \verb|EL.by.dec|).\\
+   Wyniki interpretuje siê analogicznie dla pozosta³ych przedsiêbiorstw i odpowiadaj¹cych im wartoœci $x$.
+   
+Poni¿ej przedstawiono wykres funkcji ³¹cznej gêstoœci $f_{XY}$ (po zrzutowaniu na wspóln¹ p³aszczyznê). Linie
+poziome oznaczaj¹ wartoœci $x$, dla których podejmowane s¹ decyzje w oparciu o zasadê majoryzacji prawdopodobieñstwa a posteriori $f_{Y|X}(y|x)$ (nieformalnie mówi¹c wybierana jest ta klasa $y\in\{1,2,3\}$, w przypadku której na wykresie, na przeciêciu linii poziomej przechodz¹cej przez $x$, odnosi siê do niej najwy¿sza wartoœæ ³¹cznej gêstoœci).
+
+<<wykres,eval=TRUE,echo=FALSE,comment=NA,tidy=TRUE,warning=FALSE>>=
+plot(x = NULL, xlab = "x", ylab = "f_XY", xlim = c(7, 25), ylim = c(0, 0.07))
+curve(0.2 * dnorm(x, 12, 2), from = 7, to = 25, col = "blue", xlab = NULL, ylab = NULL, add = TRUE)
+par(new = TRUE)
+curve(0.5 * dnorm(x, 17, 3), from = 7, to = 25, col = "red", xlab = NULL, ylab = NULL, add = TRUE)
+par(new = TRUE)
+curve(0.3 * dnorm(x, 20, 2.5), from = 7, to = 25, col = "green", xlab = NULL, ylab = NULL, add = TRUE)
+abline(v = x, lty = 2)
+title("£¹czna gestoœæ")
+@
+
+
+\end{document}
