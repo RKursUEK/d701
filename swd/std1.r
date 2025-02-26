@@ -2,34 +2,34 @@
 ### Statystyczna teoria decyzji
 ##############################################################################################################
 # sdt - decyzja przy Y|X
-# L - macierz definiuj¹ca funkcjê straty, domyœlnie wszystkie 
-# pozadiagonalne równe 1, diagonalne równe 0,
-# d -dane dotycz¹ce wartoœci x, prawdopodobieñstwa z rozk³adu brzegowego y 
-# (prawdopodobieñstwa a priori), typ rozk³adu warunkowego X|Y, 
-# np. dnorm - normalny, ... odnosi siê do parametrów rozk³adu
-# np. w przypadku rozk³adu normalnego s¹ to mean i sd
+# L - macierz definiujaca funkcje straty, domyslnie wszystkie 
+# pozadiagonalne rÃ³wne 1, diagonalne rowne 0,
+# d -dane dotyczace wartosci x, prawdopodobienstwa z rozkladu brzegowego y 
+# (prawdopodobienstwa a priori), typ rozkladu warunkowego X|Y, 
+# np. dnorm - normalny, ... odnosi sie do parametrÃ³w rozkÂ³adu
+# np. w przypadku rozkladu normalnego sa to mean i sd
 
 sdt <- function(L = NULL, d, py, r,...){
   pw <- function(d) eval(parse(text=paste(r,"(x=d,...)",sep="")))
-  # Warunkowa gêstoœæ x|y
+  # Warunkowa gÃªstoÅ“Ã¦ x|y
   pwx <- t(sapply(d,pw))
   nr <- dim(pwx)[1]
   nc <- dim(pwx)[2]
-  #Prawdopodobieñstwo ³¹czne (x,y)
-  pl <- pwx*matrix(rep(py,nr),nrow=nr,byrow=TRUE)
-  # Prawdopdobieñstwo warunkowe y|x
+  #PrawdopodobieÃ±stwo laczne (x,y)
+  pl <- pwx * matrix(rep(py,nr),nrow=nr,byrow=TRUE)
+  # Prawdopdobienstwo warunkowe y|x
   pwy <- prop.table(pl,1)
   
   porz<-function(l,decr=FALSE) c(order(l,decreasing=decr)[1],l[order(l,decreasing=decr)[1]])
   
   if(is.matrix(L)){
-    #Oczekiwana strata przy decyzji di
+    # Oczekiwana strata przy decyzji di
     el <- pwy %*% t(L)
-    #Decyzja minimalizuj¹ca oczekiwan¹ stratê
+    # Decyzja minimalizujaca oczekiwana strate
     
     dec <- t(apply(el,1,porz))}
   
-  #Decyzja odpowiadaj¹c¹ maksymalnemu prawdopodobieñstwu y|x
+  # Decyzja odpowiadajaca maksymalnemu prawdopodobienstwu y|x
   elmax <- matrix(1,nrow=nr,ncol=nc)-pwy
   decmax <- t(apply(pwy,1,porz,decr=TRUE))
   
@@ -56,7 +56,7 @@ sdt <- function(L = NULL, d, py, r,...){
 }
 
 ###############################################################################################################
-### Przyk³ady decyzji z sdt
+### Przyklady decyzji z sdt
 ###############################################################################################################
 
 args(sdt)
@@ -77,7 +77,7 @@ library(gamlss.dist)
 
 sdt(d = 5:10, py = c(0.2,0.3,0.5), r = "dGT", mu = c(1,10,5), sigma = 2:4, tau = rep(1.5,3))
 
-# Wykresy warunkowych gêstoœci X|Y = y
+# Wykresy warunkowych gestoÅ“ci X|Y = y
 plot(x = NULL, xlim = c(-5,5), ylim = c(-10,10), ylab = "")
 curve(dnorm(x, 0, 1.5), from = -5, to = 5, col = "red", ylab = "")
 par(new = TRUE)
@@ -87,7 +87,7 @@ curve(dnorm(x, 2, 1.5), from = -5, to = 5, col = "blue", ylab = "fx|y (x)")
 abline(v = c(0, 1, 2), lty = 2, col = c("red", "green", "blue"))
 legend("topleft", "Conditional distr. expected val.", lty = 2)
 
-# funkcja matplot - alternatywne wykreœlanie kilkuwiêkszej iloœci krzywych na jednym wykresie
+# funkcja matplot - alternatywne wykreÅ“lanie kilkuwiÃªkszej iloÅ“ci krzywych na jednym wykresie
 # Gestosci dla teoretycznych rozkladow warunkowych x|y, gdzie y = 1, 2, ..., K
 # albo (cond = FALSE)
 # (Zrzutowana) gestosc dla teoretycznego rozkladu lacznego (x, y), gdzie y = 1, 2, ..., K
