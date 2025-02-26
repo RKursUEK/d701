@@ -1,68 +1,68 @@
-u<-url("https://archive.ics.uci.edu/ml/machine-learning-databases/spambase/spambase.data")
+u <- url("https://archive.ics.uci.edu/ml/machine-learning-databases/spambase/spambase.data")
 read.table(u,header=FALSE,sep=",",dec=".")->d
 
-nu<-url("http://wizard.uek.krakow.pl/~s701dok/swd/spam_names.txt")
-read.table(nu,sep="\t",dec=".",header=FALSE)->n
+nu <- url("http://wizard.uek.krakow.pl/~s701dok/swd/spam_names.txt")
+n <- read.table(nu,sep="\t",dec=".",header=FALSE)
 install.packages("stringr")
 library(stringr)
-str_trim(as.character(unlist(n)))->n
+n <- str_trim(as.character(unlist(n)))
 
 colnames(d)<-n
 apply(d,2,class)
 class(d)
-factor(d[,58],levels=c(0,1),labels=c("nie-spam","spam"))->y
+y <- factor(d[,58],levels=c(0,1),labels=c("nie-spam","spam"))
 d[,58]<-y
 head(d)
 ############################33
 install.packages("rpart")
-library(rpart) # £adujemy pakiet z algorytmem rekurencyjnego podzia³u 
-# CART pozwalaj??cym budowaæ drzewa klasyfikacyjne
+library(rpart) # Ladujemy pakiet z algorytmem rekurencyjnego podzialu 
+# CART pozwalajacym budowaÄ‡ drzewa klasyfikacyjne
 install.packages("rpart.plot")
-library(rpart.plot) #£adujemy pakiet pozwalajšcy tworzyæ wykresy drzew
+library(rpart.plot) # Ladujemy pakiet pozwalajacy tworzyÄ‡ wykresy drzew
 
-# Pomoc R dotyczšca funkcji pakietów rpart i rpart.plot
+# Pomoc R dotyczÅ¡ca funkcji pakietÃ³w rpart i rpart.plot
 help(package=rpart)
 help(package=rpart.plot)
 
-#Budowa drzewa maksymalnego z wykorzystaniem kryterium Giniego
-(dr<-rpart(list~.,method="class",data=d))
-# Wypisanie elementów zwracanych przez funkcjê rpart
+# Budowa drzewa maksymalnego z wykorzystaniem kryterium Giniego
+(dr <- rpart(list~.,method="class",data=d))
+# Wypisanie elementÃ³w zwracanych przez funkcjÄ™ rpart
 names(dr)
 
 # Tabela i wykres dla procedury cost-complexity prunning
 printcp(dr)
 plotcp(dr)
-# Przycinanie do poddrzewa optymalnego przy wspó³czynniku 
-# z³o¿ono??ci alfa=0,05 (cp=0.025)
+# Przycinanie do poddrzewa optymalnego przy wspÃ³Å‚czynniku 
+# zÅ‚oÅ¼onosci alfa=0,05 (cp=0.025)
 (pdr<-prune(dr,cp=0.025))
-#Podsumowanie zbudowanego drzewa maksymalnego
+# Podsumowanie zbudowanego drzewa maksymalnego
 summary(dr)
-#Podsumowanie zbudowanego o mininalnym cost-complexity
+# Podsumowanie zbudowanego o mininalnym cost-complexity
 summary(dr,cp=0.025)
 
-# ??cie¿ki prowadz??ce do li??ci (wêz³ów koñcowych)
+# ScieÅ¼ki prowadzace do lisci (wezlow koncowych)
 (nrl<-as.numeric(rownames(pdr$frame[pdr$frame[,1]=="<leaf>",]))) #Numery li??ci
 length(nrl) #Liczba li??ci
 path.rpart(pdr, node =nrl)
-(yl<-pdr$frame[pdr$frame[,1]=="<leaf>","yval"]) #Kategorie przewidywane dlaw oparciu o li??cie
+(yl<-pdr$frame[pdr$frame[,1]=="<leaf>","yval"]) # Kategorie przewidywane dlaw oparciu o liscie
 
-#Wykresy drzewa maksymalnego
-#Wykres drzewa - dla wêz³ów odsetek obserwacji w poszczególnych klasach (extra=4)
-prp(dr,type=4,extra=4,main="Wykres drzewa maksymalnego dla kredytów",
+# Wykresy drzewa maksymalnego
+# Wykres drzewa - dla wezlow odsetek obserwacji w poszczegolnych klasach (extra=4)
+prp(dr,type=4,extra=4,main = "Wykres drzewa maksymalnego dla kredytÃ³w" ,
     box.col=c("pink", "palegreen3")[dr$frame$yval])
-#Wykres drzewa - dla wêz³ów odsetek obserwacji dotyczšcy klasy przypisanej wêz³owi (extra=8)
-prp(dr,type=4,extra=8,main="Wykres drzewa maksymalnego dla kredytów",
+# Wykres drzewa - dla wÄ™zÅ‚Ã³w odsetek obserwacji dotyczacy klasy przypisanej wÄ™zÅ‚owi (extra=8)
+prp(dr,type=4,extra=8,main="Wykres drzewa maksymalnego dla kredytÃ³w",
     box.col=c("pink", "palegreen3")[dr$frame$yval])
 
-#Wykresy drzewa optymalnego - o minimalnym cost-complexity
-#Wykres drzewa - dla wêz³ów odsetek obserwacji w poszczególnych klasach (extra=4)
-prp(pdr,type=4,extra=4,main="Wykres drzewa optymalnego dla kredytów",
+# Wykresy drzewa optymalnego - o minimalnym cost-complexity
+# Wykres drzewa - dla wezlow odsetek obserwacji w poszczegolnych klasach (extra=4)
+prp(pdr,type=4,extra=4,main="Wykres drzewa optymalnego dla kredytÃ³w",
     box.col=c("pink", "palegreen3")[pdr$frame$yval])
-#Wykres drzewa - dla wêz³ów odsetek obserwacji dotyczšcy klasy przypisanej wêz³owi (extra=8)
-prp(pdr,type=4,extra=8,main="Wykres drzewa optymalnego dla kredytów",
+# Wykres drzewa - dla wÄ™zÅ‚Ã³w odsetek obserwacji dotyczÅ¡cy klasy przypisanej wÄ™zÅ‚owi (extra=8)
+prp(pdr,type=4,extra=8,main="Wykres drzewa optymalnego dla kredytÃ³w",
     box.col=c("pink", "palegreen3")[pdr$frame$yval])
 
-#Przewidywania drzewa optymalnego dotycz??ce kategorii listu
+# Przewidywania drzewa optymalnego dotycz??ce kategorii listu
 predict(pdr,d)
 head(predict(pdr,d, type = "matrix"))
 (prog<-predict(pdr,d,type="class"))
