@@ -48,6 +48,6 @@ crit(mt, alpha = 0.2)
 
 # Przyklad zastosowania (macierz wyplaty 5x5 o pseudolosowo
 # wygenerowanych wartosciach calkowitych z rozkladu jednostajnego (a = 1, b = 20))
-mw <- matrix(round(runif(25, 1, 20)), ncol=5)
+mw <- matrix(round(runif(25, 1, 20)), ncol = 5)
 crit(mw)
 crit(mw, 0.4)
