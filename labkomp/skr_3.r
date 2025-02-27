@@ -32,10 +32,10 @@ ram <- recordPlot()
 lm(syn ~ ., data = wzrost)
 summary(lm(syn ~ ., data = wzrost))
 
-# Wyb?r podzbioru regresorow w oparciu o kryterium informacyjne
+# Wybor podzbioru regresorow w oparciu o kryterium informacyjne
 step(lm(syn ~ ., data = wzrost))
 
-# Nanjni?sza warto?? kryterium AIC dla podzbioru zmiennych
+# Nanjnizsza wartosc kryterium AIC dla podzbioru zmiennych
 #obja?niaj?cych wzrost ojca, wzrost matki
 
 lm(syn ~ ojciec + matka, data = wzrost)
@@ -60,10 +60,10 @@ plot(lm(syn ~ ., data = wzrost))
 # Przyklad wektora numerycznego
 (wn <- round(rnorm(50, 100, 30), 2))
 
-# Przyk?ad wektora logicznego
+# Przyklad wektora logicznego
 (wl <- as.logical(rbinom(20, 1, .5)))
 
-# Przyk?ad wektora tekstowego
+# Przyklad wektora tekstowego
 (wt <- c("raz", "dwa", "trzy"))
 
 # Przyklad wektora czynnikowego
