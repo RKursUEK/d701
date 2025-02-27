@@ -1,4 +1,4 @@
-# Zaladowanie danych
+# Zaladowanie danych z pliku lin.RData
 load(choose.files())
 
 # Wypisanie obiektow
