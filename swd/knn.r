@@ -1,137 +1,131 @@
 # Dane
-adr<-"https://archive.ics.uci.edu/ml/machine-learning-databases/statlog/german/german.data"
+adr <- "https://archive.ics.uci.edu/ml/machine-learning-databases/statlog/german/german.data"
 
-d<-read.table(adr,sep="",dec=".",header=FALSE,stringsAsFactors=TRUE)
+d <- read.table(adr, sep="", dec=".", header=FALSE, stringsAsFactors=TRUE)
 dim(d)
 head(d)
-ncol<-dim(d)[2]
+ncol <- dim(d)[2]
 
-# Wybór zmiennej zale¿nej oraz iloœciowych zmiennych objaœniaj¹cych
+# WybÃ³r zmiennej zaleÅ¼nej oraz iloÅ›ciowych zmiennych objaÅ›niajÄ…cych
 num <- !sapply(d[,-ncol], is.factor)
-dnum<-d[,num]
+dnum <- d[,num]
 dim(dnum)
 head(dnum)
 dnum<-dnum[,c(1,2,5)]
-y<-d[,ncol]
-z<--y+2
-dn<-cbind(factor(z,labels=c("nie","tak")),dnum)
-colnames(dn)<-c("splata","okres kredytowania","kwota kredytu","wiek aplikanta")
+y <- d[,ncol]
+z <- -y + 2
+dn <- cbind(factor(z, labels = c("nie", "tak")), dnum)
+colnames(dn) <- c("splata", "okres kredytowania", "kwota kredytu", "wiek aplikanta")
 head(dn)
 
-nrow<-dim(dn)[1]
+nrow <- dim(dn)[1]
 
-#Próba ucz¹ca
-m<-nrow
-p<-0.8
-itrain<-sort(sample(1:m, size = round(m*p), replace = FALSE))
+# PrÃ³ba uczÄ…ca
+m <- nrow
+p <- 0.8
+itrain <- sort(sample(1:m, size = round(m*p), replace = FALSE))
 
-train<-dn[itrain,]
-test<-dn[-itrain,]
+train <- dn[itrain,]
+test <- dn[-itrain,]
 dim(train)
 dim(test)
 
-#Wykresy pairs
-pairs(train[,-1],col=c("red","green")[as.numeric(train[,1])],
-      main="Próba ucz¹ca")
-pairs(test[,-1],col=c("red","green")[as.numeric(test[,1])],
-      main="Próba testowa")
+# Wykresy pairs
+pairs(train[,-1],col=c("red","green")[as.numeric(train[,1])], main = "PrÃ³ba uczÄ…ca")
+pairs(test[,-1],col=c("red","green")[as.numeric(test[,1])], main = "PrÃ³ba testowa")
 
 install.packages("psych")
 library(psych)
 
-describeBy(train[,-1],group=train[,1])
-describeBy(test[,-1],group=test[,1])
+describeBy(train[,-1], group = train[,1])
+describeBy(test[,-1], group = test[,1])
 
-### Metoda k-najbli¿szych s¹siadów (kNN) w podejmowaniu decyzji - podejœcie
-### nieparametryczne
+### Metoda k-najbliÅ¼szych sÄ…siadÃ³w (kNN) w podejmowaniu decyzji - podejÅ›cie nieparametryczne
 install.packages("kknn") #pakiet kknn
 library(kknn)
 
-## Kroswalidacja leave-one-out, wybór optymalnych parametrów kNN
-(cv<-train.kknn(splata~.,data=train,kmax=10,distance=2,scale=TRUE,
-    kernel=c("triangular", "rectangular","epanechnikov", "optimal","inv")))
+## Kroswalidacja leave-one-out, wybÃ³r optymalnych parametrÃ³w kNN
+(cv <- train.kknn(splata ~ ., data = train, kmax = 10, distance = 2, scale = TRUE,
+    kernel = c("triangular", "rectangular", "epanechnikov", "optimal", "inv")))
 
 names(cv)
 plot(cv)
 summary(cv)
 
-#Parametry kNN z najmniejsz¹ stop¹ b³êdnych klasyfikacji (missclasification rate)
-par<-cv$best.parameters
-kern<-par[[1]]  # kernel="rectangular" - równa wagi niezale¿nie od odleg³oœci najbli¿szych s¹siadów przy wyznaczaniu prognozy
-kopt<-par[[2]]  # k=9 - uwzglêdnianie 9 najbli¿szych s¹siadów przy wyznaczaniu prognozy 
+# Parametry kNN z najmniejszÄ… stopÄ… bÅ‚Ä™dnych klasyfikacji (missclasification rate)
+par <- cv$best.parameters
+kern <- par[[1]]  # kernel = "rectangular" - rÃ³wna wagi niezaleÅ¼nie od odlegÅ‚oÅ›ci najbliÅ¼szych sÄ…siadÃ³w przy wyznaczaniu prognozy
+kopt <- par[[2]]  # k = 9 - uwzglÄ™dnianie 9 najbliÅ¼szych sÄ…siadÃ³w przy wyznaczaniu prognozy 
 
-# Trafnoœæ prognoz kNN dla CV (wiersze - obserwowane wartoœci,
-# kolumny - prognozy)
-prtrain<-cv$fitted.values[[order(cv$MISCLASS)[1]]]
-(licz<-table(train[,1],prtrain))
-(prop<-prop.table(licz,1))
+# TrafnoÅ›Ä‡ prognoz kNN dla CV (wiersze - obserwowane wartoÅ›ci, kolumny - prognozy)
+prtrain <- cv$fitted.values[[order(cv$MISCLASS)[1]]]
+(licz <- table(train[,1],prtrain))
+(prop <- prop.table(licz,1))
 
-# Wykres dla próby ucz¹cej wyniki CV leave-one-out:
-# plusy - sp³acone kredyty, okrêgi - niesp³acone kredyty, 
-# czerwony - b³êdne prognozy, czarny - trafne prognozy
+# Wykres dla prÃ³by uczÄ…cej wyniki CV leave-one-out: 
+# plusy - spÅ‚acone kredyty, okrÄ™gi - niespÅ‚acone kredyty, 
+# czerwony - bÅ‚Ä™dne prognozy, czarny - trafne prognozy
 pairs(train[,-1], pch = c(1,3)[as.numeric(train$splata)], 
-      col = c("black", "red")[(train$splata!= prtrain)+1], 
-      main="Próba ucz¹ca")
+      col = c("black", "red")[(train$splata!= prtrain) + 1], 
+      main = "PrÃ³ba uczÄ…ca")
 
-# Prognozy dla próby testowej w oparciu o metodê kNN 
-# z parametrami minimalizuj¹cymi stopê b³êdnych klasyfikacji
+# Prognozy dla prÃ³by testowej w oparciu o metodÄ™ kNN 
+# z parametrami minimalizujÄ…cymi stopÄ™ bÅ‚Ä™dnych klasyfikacji
 # w procedurze leave-one-out, metryka euklidesowa (d=2),
 # normalizacja (scale=TRUE)
-(knn<-kknn(splata~.,train,test,k=kopt,distance=2,kernel = kern, scale=TRUE))
+(knn <- kknn(splata ~ ., train, test, k = kopt, distance = 2, kernel = kern, scale = TRUE))
 names(knn)
 summary(knn)
 
-#Prognozy sp³aty dotycz¹ce próby testowej
+#Prognozy spÅ‚aty dotyczÄ…ce prÃ³by testowej
 prtest<-fitted(knn)
-# Trafnoœæ prognoz kNN dla próby testowej (wiersze - obserwowane wartoœci,
+# TrafnoÅ›Ä‡ prognoz kNN dla prÃ³by testowej (wiersze - obserwowane wartoÅ›ci,
 # kolumny - prognozy)
-(liczt<-table(test[,1],prtest))
-(propt<-prop.table(liczt,1))
+(liczt <- table(test[,1],prtest))
+(propt <- prop.table(liczt,1))
 
-# Wykres trafnoœci prognoz kNN dla próby testowej:
-# plusy - sp³acone kredyty, okrêgi - niesp³acone kredyty, 
-# czerwony - b³êdne prognozy, czarny - trafne prognozy
+# Wykres trafnoÅ›ci prognoz kNN dla prÃ³by testowej:
+# plusy - spÅ‚acone kredyty, okrÄ™gi - niespÅ‚acone kredyty, 
+# czerwony - bÅ‚Ä™dne prognozy, czarny - trafne prognozy
 pairs(test[,-1], pch = c(1,3)[as.numeric(test$splata)], 
-      col = c("black", "red")[(test$splata!= prtest)+1], 
-      main="Próba testowa")
+      col = c("black", "red")[(test$splata!= prtest) + 1], 
+      main = "PrÃ³ba testowa")
 
-# Dla porównania wyniki kNN, z metryk¹ Hamminga - tasówkow¹ (d=1),
-# i k=3 najbli¿szych s¹siadów, g³osowanie wa¿one odleg³oœciami,
-# waga odwrotnie proporcjonalna do odleg³oœci (kernel="inv"), 
+# Dla porÃ³wnania wyniki kNN, z metrykÄ… Hamminga - tasÃ³wkowÄ… (d = 1),
+# i k=3 najbliÅ¼szych sÄ…siadÃ³w, gÅ‚osowanie waÅ¼one odlegÅ‚oÅ›ciami,
+# waga odwrotnie proporcjonalna do odlegÅ‚oÅ›ci (kernel = "inv"), 
 # normalizacja zmiennych (scale=TRUE)
 
-(khi<-kknn(splata~.,train,test,k=3,distance=1,kernel = "inv", scale=TRUE))
-# Prognozy powy¿szego wariantu kNN dla próby testowej
+(khi <- kknn(splata ~ ., train, test, k = 3, distance = 1, kernel = "inv", scale = TRUE))
+# Prognozy powyÅ¼szego wariantu kNN dla prÃ³by testowej
 summary(khi)
-#Trafnoœæ dla próby testowej
-phi<-fitted(khi)
-(liczhi<-table(test[,1],phi))
-(prophi<-prop.table(liczhi,1))
+# TrafnoÅ›Ä‡ dla prÃ³by testowej
+phi <- fitted(khi)
+(liczhi <- table(test[,1], phi))
+(prophi <- prop.table(liczhi, 1))
 
 #################################################
 
-# Poszukiwanie k=3 punktów przestrzeni metrycznej 
-# o najmniejszej odleg³oœci do danego punktu
-plot(test[,2:3],col=c("red","green")[as.numeric(test[,1])],
-     main="Przed standaryzacj¹")
-pp<-c(52,8000)
-points(pp[1],pp[2],pch=16,cex = 2)
+# Poszukiwanie k = 3 punktÃ³w przestrzeni metrycznej 
+# o najmniejszej odlegÅ‚oÅ›ci do danego punktu
+plot(test[, 2:3], col = c("red", "green")[as.numeric(test[, 1])], main = "Przed standaryzacjÄ…")
+pp <- c(52,8000)
+points(pp[1], pp[2], pch = 16, cex = 2)
 
-#Standaryzacja na (0,1)
-t<-test[,2:3]
-ts<-scale(t,colMeans(t),apply(t,2,sd))
-tse<-data.frame(splata=test[,1],ts)
-pps<-scale(matrix(pp,ncol=2),colMeans(t),apply(t,2,sd))
-plot(ts,col=c("red","green")[as.numeric(test[,1])],
-     main="Po standaryzacji. Przestrzeñ z metryk¹ euklidesow¹")
-points(pps[1],pps[2],pch=16,cex = 2)
+# Standaryzacja na (0,1)
+t <- test[, 2:3]
+ts <- scale(t, colMeans(t), apply(t, 2, sd))
+tse <- data.frame(splata = test[,1], ts)
+pps <- scale(matrix(pp, ncol = 2), colMeans(t), apply(t, 2, sd))
+plot(ts, col = c("red", "green")[as.numeric(test[, 1])], main = "Po standaryzacji. PrzestrzeÅ„ z metrykÄ… euklidesowÄ…")
+points(pps[1], pps[2], pch = 16, cex = 2)
 
-identify(ts,plot=TRUE)
-(.Last.value->nn)
+identify(ts, plot=TRUE)
+(nn <- .Last.value)
 locator(n = 2, type = "l")
-(near<-tse[nn,1:3])
-(coord<-rbind(as.numeric(pps),near[,-1]))
-dist(coord,method = "euclidean", diag = TRUE, upper = TRUE)
+(near <- tse[nn,1:3])
+(coord <- rbind(as.numeric(pps), near[, -1]))
+dist(coord, method = "euclidean", diag = TRUE, upper = TRUE)
 
 ##############################
 
