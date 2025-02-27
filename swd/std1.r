@@ -11,11 +11,11 @@
 
 sdt <- function(L = NULL, d, py, r,...){
   pw <- function(d) eval(parse(text=paste(r,"(x=d,...)",sep="")))
-  # Warunkowa gêstoœæ x|y
+  # Warunkowa gestosc x|y
   pwx <- t(sapply(d,pw))
   nr <- dim(pwx)[1]
   nc <- dim(pwx)[2]
-  #Prawdopodobieñstwo laczne (x,y)
+  # Prawdopodobienstwo laczne (x,y)
   pl <- pwx * matrix(rep(py,nr),nrow=nr,byrow=TRUE)
   # Prawdopdobienstwo warunkowe y|x
   pwy <- prop.table(pl,1)
@@ -87,7 +87,7 @@ curve(dnorm(x, 2, 1.5), from = -5, to = 5, col = "blue", ylab = "fx|y (x)")
 abline(v = c(0, 1, 2), lty = 2, col = c("red", "green", "blue"))
 legend("topleft", "Conditional distr. expected val.", lty = 2)
 
-# funkcja matplot - alternatywne wykreœlanie kilkuwiêkszej iloœci krzywych na jednym wykresie
+# funkcja matplot - alternatywne wykreslanie wiekszej ilosci krzywych na jednym wykresie
 # Gestosci dla teoretycznych rozkladow warunkowych x|y, gdzie y = 1, 2, ..., K
 # albo (cond = FALSE)
 # (Zrzutowana) gestosc dla teoretycznego rozkladu lacznego (x, y), gdzie y = 1, 2, ..., K
