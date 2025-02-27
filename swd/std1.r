@@ -3,7 +3,7 @@
 ##############################################################################################################
 # sdt - decyzja przy Y|X
 # L - macierz definiujaca funkcje straty, domyslnie wszystkie 
-# pozadiagonalne równe 1, diagonalne rowne 0,
+# pozadiagonalne rowne 1, diagonalne rowne 0,
 # d -dane dotyczace wartosci x, prawdopodobienstwa z rozkladu brzegowego y 
 # (prawdopodobienstwa a priori), typ rozkladu warunkowego X|Y, 
 # np. dnorm - normalny, ... odnosi sie do parametrów rozk³adu
